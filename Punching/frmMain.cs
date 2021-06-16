@@ -261,10 +261,106 @@ namespace Punching
 
             using (SqlConnection conn = new SqlConnection(CONNECT.ConnectionString))
             {
+                conn.Open();
+                //first thing is to grab is the matieral supplier
+                frmMatSupplier frm = new frmMatSupplier();
+                frm.ShowDialog();
+                //set supplier
+                sql = "update dbo.batch_header set mat_supplier = '" + LoginClass.Login.material + "',qcomplete = -1,date_complete = getdate() where id = " + batch_id.ToString();
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-
+                    cmd.ExecuteNonQuery();
                 }
+                //set all programs as complete
+                sql = "update dbo.batch_programs set complete = -1 where header_id = " + batch_id;
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                //here we loop through each  door id thats on the batch id
+                sql = "select distinct door_id from dbo.batch_programs where header_id = " + batch_id.ToString(); ;
+                using (SqlCommand cmdDoorLoop = new SqlCommand(sql, conn))
+                {
+                    DataTable dtDoorLoop = new DataTable();
+                    SqlDataAdapter da = new SqlDataAdapter(cmdDoorLoop);
+                    da.Fill(dtDoorLoop);
+
+                    foreach (DataRow row in dtDoorLoop.Rows)
+                    {
+                        int incomplete = 0;
+                        //loop through each door - and each program number
+                        sql = "select complete from dbo.batch_programs where door_id =" + row[0].ToString();
+                        using (SqlCommand cmdCompelteCheck = new SqlCommand(sql, conn))
+                        {
+                            DataTable dtProgramNo = new DataTable();
+                            SqlDataAdapter daProgramNo = new SqlDataAdapter(cmdCompelteCheck);
+                            daProgramNo.Fill(dtProgramNo);
+                            foreach (DataRow rowProgramNo in dtProgramNo.Rows)
+                            {
+                                if (Convert.ToInt32(rowProgramNo[0]) == 0)
+                                    incomplete = -1; //if a program number is not complete then we skip the daily goal update
+                            }
+
+                            if (incomplete != -1)
+                            {
+                                //everything is complete so grab the data from the door 
+                                sql = "SELECT COALESCE(quantity_same,1),COALESCE(time_punch,1) FROM dbo.door where id = " + row[0].ToString();
+                                using (SqlCommand cmdDoorDetails = new SqlCommand(sql, conn))
+                                {
+                                    SqlDataAdapter daDoorDetails = new SqlDataAdapter(cmdDoorDetails);
+                                    DataTable dtDoorDetails = new DataTable();
+                                    daDoorDetails.Fill(dtDoorDetails);
+
+                                    sql = "UPDATE dbo_daily_department_goal SET actual_hours_punch =  actual_hours_punch + " + (Convert.ToDouble(dtDoorDetails.Rows[0][0].ToString()) * Convert.ToDouble(dtDoorDetails.Rows[0][1].ToString()) / 60).ToString() + " WHERE date_goal= CAST(GETDATE() as date)";
+                                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                                        cmd.ExecuteNonQuery();
+                                    log_time_100_percent();
+                                    sql = "UPDATE dbo_door SET complete_punch = -1, date_punch_complete= getdate() WHERE id =" + row[0].ToString();
+                                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                                        cmd.ExecuteNonQuery();
+
+                                }
+                            }
+
+                        }
+                    }
+                }
+                conn.Close();
+            }
+        }
+
+        private void log_time_100_percent()
+        {
+            string sql = "select time_100_percent_punch,actual_hours_punch,goal_hours_punch FROM dbo.daily_department_goal where date_goal = CAST(GETDATE() as date)";
+            using (SqlConnection connLog = new SqlConnection(CONNECT.ConnectionString))
+            {
+                connLog.Open();
+                using (SqlCommand cmd = new SqlCommand(sql, connLog))
+                {
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    if (dt.Rows[0][0] == null) //time_100_punch_percent
+                    {
+                        if (Convert.ToDouble(dt.Rows[0][1]) / Convert.ToDouble(dt.Rows[0][2]) >= 1)
+                        {
+                            sql = "UPDATE dbo_daily_department_goal SET time_100_percent_punch = GETDATE() WHERE date_goal = CAST(GETDATE() as date)";
+                            cmd.CommandText = sql;
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                if (MessageBox.Show("Are you sure you want to exit?", "Exit!", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    Environment.Exit(1);
+                else
+                    e.Cancel = true;
             }
         }
     }

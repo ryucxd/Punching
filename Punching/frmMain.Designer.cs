@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.lbl = new System.Windows.Forms.Label();
             this.lblHours = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnExtensions = new System.Windows.Forms.Button();
             this.btnStock = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
@@ -44,9 +44,10 @@
             this.txtBatchID = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tempLabel = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -83,18 +84,8 @@
             this.lblHours.Name = "lblHours";
             this.lblHours.Size = new System.Drawing.Size(207, 18);
             this.lblHours.TabIndex = 2;
-            this.lblHours.Text = "label2";
+            this.lblHours.Text = "99";
             this.lblHours.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackgroundImage = global::Punching.Properties.Resources.logo;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 56);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(225, 93);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
             // 
             // btnExtensions
             // 
@@ -215,11 +206,23 @@
             this.tempLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.tempLabel.Visible = false;
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.ImageLocation = "";
+            this.pictureBox2.Location = new System.Drawing.Point(12, 51);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(237, 99);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 18;
+            this.pictureBox2.TabStop = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 641);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.tempLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtBatchID);
@@ -230,18 +233,18 @@
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnStock);
             this.Controls.Add(this.btnExtensions);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lblHours);
             this.Controls.Add(this.lbl);
             this.Controls.Add(this.dataGridView1);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Batch List";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Shown += new System.EventHandler(this.frmMain_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -252,7 +255,6 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label lbl;
         private System.Windows.Forms.Label lblHours;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnExtensions;
         private System.Windows.Forms.Button btnStock;
         private System.Windows.Forms.Button btnLoad;
@@ -265,6 +267,7 @@
         private System.Windows.Forms.TextBox txtBatchID;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label tempLabel;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
 
