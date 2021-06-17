@@ -113,6 +113,7 @@
             this.btnLoad.TabIndex = 6;
             this.btnLoad.Text = "View Load";
             this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnItems
             // 
@@ -122,6 +123,7 @@
             this.btnItems.TabIndex = 7;
             this.btnItems.Text = "Bending Items";
             this.btnItems.UseVisualStyleBackColor = true;
+            this.btnItems.Click += new System.EventHandler(this.btnItems_Click);
             // 
             // btnComplete
             // 

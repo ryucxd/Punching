@@ -321,7 +321,6 @@ namespace Punching
 
                                 }
                             }
-
                         }
                     }
                 }
@@ -340,7 +339,7 @@ namespace Punching
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
-                    if (dt.Rows[0][0] == null) //time_100_punch_percent
+                    if (dt.Rows[0][0] == null) //time_100_punch_percent //copying the layout in access too
                     {
                         if (Convert.ToDouble(dt.Rows[0][1]) / Convert.ToDouble(dt.Rows[0][2]) >= 1)
                         {
@@ -362,6 +361,18 @@ namespace Punching
                 else
                     e.Cancel = true;
             }
+        }
+
+        private void btnItems_Click(object sender, EventArgs e)
+        {
+            frmBendingStock frm = new frmBendingStock();
+            frm.ShowDialog();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            frmReports frm = new frmReports();
+            frm.ShowDialog();
         }
     }
 }

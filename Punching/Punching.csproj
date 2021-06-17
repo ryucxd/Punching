@@ -47,6 +47,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CONNECT.cs" />
+    <Compile Include="frmBendingStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBendingStock.Designer.cs">
+      <DependentUpon>frmBendingStock.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLateLoadReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLateLoadReport.Designer.cs">
+      <DependentUpon>frmLateLoadReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -65,9 +77,21 @@
     <Compile Include="frmMatSupplier.Designer.cs">
       <DependentUpon>frmMatSupplier.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmReports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmReports.Designer.cs">
+      <DependentUpon>frmReports.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmBendingStock.resx">
+      <DependentUpon>frmBendingStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLateLoadReport.resx">
+      <DependentUpon>frmLateLoadReport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
@@ -76,6 +100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMatSupplier.resx">
       <DependentUpon>frmMatSupplier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmReports.resx">
+      <DependentUpon>frmReports.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
