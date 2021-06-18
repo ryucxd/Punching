@@ -16,7 +16,7 @@ namespace Punching
         public frmMain()
         {
             InitializeComponent();
-            string sql = "select id as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header  order by qid desc";
+            string sql = "select top 200 qid as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header  order by qid desc";
             using (SqlConnection conn = new SqlConnection(CONNECT.ConnectionString))
             {
                 conn.Open();
@@ -100,6 +100,13 @@ namespace Punching
             catch
             {
             }
+            try
+            {
+                dataGridView1.Columns.Remove("Remove");
+            }
+            catch
+            {
+            }
             //also add the button here too
             DataGridViewButtonColumn completeButtonColumn = new DataGridViewButtonColumn();
             completeButtonColumn.Name = "Complete";
@@ -110,6 +117,17 @@ namespace Punching
             {
                 dataGridView1.Columns.Insert(columnIndex, completeButtonColumn);
             }
+            DataGridViewButtonColumn removeButtonColumn = new DataGridViewButtonColumn();
+            removeButtonColumn.Name = "Remove";
+            removeButtonColumn.Text = "✖";
+            removeButtonColumn.UseColumnTextForButtonValue = true;
+            int removeColumnIndex = (dataGridView1.Columns.Count);
+            if (dataGridView1.Columns["Remove"] == null)
+            {
+                dataGridView1.Columns.Insert(removeColumnIndex, removeButtonColumn);
+            }
+            foreach (DataGridViewColumn col in dataGridView1.Columns)
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dataGridView1.Columns[4].Visible = false;
             dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -122,10 +140,23 @@ namespace Punching
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            int index = dataGridView1.Columns["Complete"].Index;
-            if (e.ColumnIndex == index)
+            int completeIndex = dataGridView1.Columns["Complete"].Index;
+            int removeIndex = dataGridView1.Columns["Remove"].Index;
+            int batchIndex = dataGridView1.Columns["Batch ID"].Index;
+            int descriptionIndex = dataGridView1.Columns["Description"].Index;
+
+            if (e.ColumnIndex == completeIndex)
             {
                 MessageBox.Show("Complete clicked");
+            }
+            if (e.ColumnIndex == removeIndex)
+            {
+                //MessageBox.Show(dataGridView1.Rows[e.RowIndex].Cells[batchIndex].Value.ToString());
+                string qname = dataGridView1.Rows[e.RowIndex].Cells[descriptionIndex].Value.ToString();
+                qname = qname.Replace(" ", "");
+                qname = qname.Replace(".", "");
+                frmRemoveFromBatch frm = new frmRemoveFromBatch(qname);
+                frm.ShowDialog();
             }
         }
 
@@ -212,7 +243,7 @@ namespace Punching
             {
                 dataGridView1.DataSource = null;
                 //filter batch id
-                string sql = "select id as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header where id like '%" + txtBatchID.Text + "%'  order by qid desc";
+                string sql = "select top 200 id as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header where id like '%" + txtBatchID.Text + "%'  order by qid desc";
                 using (SqlConnection conn = new SqlConnection(CONNECT.ConnectionString))
                 {
                     conn.Open();
@@ -228,7 +259,7 @@ namespace Punching
             }
             else
             {
-                string sql = "select id as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header  order by qid desc";
+                string sql = "select top 200 id as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header  order by qid desc";
                 using (SqlConnection conn = new SqlConnection(CONNECT.ConnectionString))
                 {
                     conn.Open();
@@ -372,6 +403,12 @@ namespace Punching
         private void btnLoad_Click(object sender, EventArgs e)
         {
             frmReports frm = new frmReports();
+            frm.ShowDialog();
+        }
+
+        private void btnStock_Click(object sender, EventArgs e)
+        {
+            frmManageStock frm = new frmManageStock();
             frm.ShowDialog();
         }
     }

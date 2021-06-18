@@ -71,17 +71,35 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmManageStock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmManageStock.Designer.cs">
+      <DependentUpon>frmManageStock.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmMatSupplier.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmMatSupplier.Designer.cs">
       <DependentUpon>frmMatSupplier.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmRemoveFromBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRemoveFromBatch.Designer.cs">
+      <DependentUpon>frmRemoveFromBatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmReports.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmReports.Designer.cs">
       <DependentUpon>frmReports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmValidation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmValidation.Designer.cs">
+      <DependentUpon>frmValidation.cs</DependentUpon>
     </Compile>
     <Compile Include="Login.cs" />
     <Compile Include="Program.cs" />
@@ -98,11 +116,20 @@
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmManageStock.resx">
+      <DependentUpon>frmManageStock.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMatSupplier.resx">
       <DependentUpon>frmMatSupplier.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmRemoveFromBatch.resx">
+      <DependentUpon>frmRemoveFromBatch.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmReports.resx">
       <DependentUpon>frmReports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmValidation.resx">
+      <DependentUpon>frmValidation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
