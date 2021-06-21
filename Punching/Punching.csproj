@@ -53,6 +53,12 @@
     <Compile Include="frmBendingStock.Designer.cs">
       <DependentUpon>frmBendingStock.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmExtensions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmExtensions.Designer.cs">
+      <DependentUpon>frmExtensions.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmLateLoadReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmBendingStock.resx">
       <DependentUpon>frmBendingStock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmExtensions.resx">
+      <DependentUpon>frmExtensions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmLateLoadReport.resx">
       <DependentUpon>frmLateLoadReport.cs</DependentUpon>
