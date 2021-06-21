@@ -26,6 +26,7 @@ namespace Punching
                 return;
             }
             Login.material = cmbMatieral.Text;
+            this.Close();
         }
     }
 }

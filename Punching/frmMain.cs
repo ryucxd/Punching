@@ -53,6 +53,7 @@ namespace Punching
 
         private void bendingAlert()
         {
+            return;
             string sql = "select [description],requested_amount from dbo.bending_stock_items where request_yn = -1";
             using (SqlConnection conn = new SqlConnection(CONNECT.ConnectionString))
             {
@@ -128,7 +129,7 @@ namespace Punching
             }
             foreach (DataGridViewColumn col in dataGridView1.Columns)
                 col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView1.Columns[4].Visible = false;
+          //  dataGridView1.Columns[4].Visible = false;
             dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
@@ -147,7 +148,10 @@ namespace Punching
 
             if (e.ColumnIndex == completeIndex)
             {
-                MessageBox.Show("Complete clicked");
+                int qnameIndex = dataGridView1.Columns["Description"].Index;
+                markAsComplete(Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[batchIndex].Value),dataGridView1.Rows[e.RowIndex].Cells[qnameIndex].Value.ToString());
+                dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.DarkSeaGreen;
+                MessageBox.Show("Batch Complete", "", MessageBoxButtons.OK);
             }
             if (e.ColumnIndex == removeIndex)
             {
@@ -243,7 +247,7 @@ namespace Punching
             {
                 dataGridView1.DataSource = null;
                 //filter batch id
-                string sql = "select top 200 id as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header where id like '%" + txtBatchID.Text + "%'  order by qid desc";
+                string sql = "select top 200 qid as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header where qid like '%" + txtBatchID.Text + "%'  order by qid desc";
                 using (SqlConnection conn = new SqlConnection(CONNECT.ConnectionString))
                 {
                     conn.Open();
@@ -259,7 +263,7 @@ namespace Punching
             }
             else
             {
-                string sql = "select top 200 id as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header  order by qid desc";
+                string sql = "select top 200 qid as [Batch ID],qname as [Description],machine as [Machine],datecomplete as [Date Complete],qcomplete as [QComplete] from dbo.batch_header  order by qid desc";
                 using (SqlConnection conn = new SqlConnection(CONNECT.ConnectionString))
                 {
                     conn.Open();
@@ -283,7 +287,7 @@ namespace Punching
 
 
 
-        private void markAsComplete(int batch_id)
+        private void markAsComplete(int batch_id,string qname)
         {
             //this is the big one
 
@@ -294,22 +298,31 @@ namespace Punching
             {
                 conn.Open();
                 //first thing is to grab is the matieral supplier
-                frmMatSupplier frm = new frmMatSupplier();
+                frmMatSupplier frm = new frmMatSupplier(); //can remove this form entirely and always pick steelco
                 frm.ShowDialog();
                 //set supplier
-                sql = "update dbo.batch_header set mat_supplier = '" + LoginClass.Login.material + "',qcomplete = -1,date_complete = getdate() where id = " + batch_id.ToString();
+                
+                int header_id = 0;
+                sql = "SELECT id FROM dbo.batch_header WHERE qname = '" + qname + "'";
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    header_id = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+
+                sql = "update dbo.batch_header set mat_supplier = '" + LoginClass.Login.material + "',qcomplete = -1,datecomplete = getdate() where id = " + header_id.ToString();
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
                 }
                 //set all programs as complete
-                sql = "update dbo.batch_programs set complete = -1 where header_id = " + batch_id;
+                sql = "update dbo.batch_programs set complete = -1 where header_id = " + header_id.ToString();
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
                 }
                 //here we loop through each  door id thats on the batch id
-                sql = "select distinct door_id from dbo.batch_programs where header_id = " + batch_id.ToString(); ;
+
+                    sql = "select distinct door_id from dbo.batch_programs where header_id = " + header_id.ToString();  //this needs to be the full id
                 using (SqlCommand cmdDoorLoop = new SqlCommand(sql, conn))
                 {
                     DataTable dtDoorLoop = new DataTable();
@@ -320,7 +333,7 @@ namespace Punching
                     {
                         int incomplete = 0;
                         //loop through each door - and each program number
-                        sql = "select complete from dbo.batch_programs where door_id =" + row[0].ToString();
+                        sql = "select complete from dbo.batch_programs where door_id = " + row[0].ToString();
                         using (SqlCommand cmdCompelteCheck = new SqlCommand(sql, conn))
                         {
                             DataTable dtProgramNo = new DataTable();
@@ -342,13 +355,13 @@ namespace Punching
                                     DataTable dtDoorDetails = new DataTable();
                                     daDoorDetails.Fill(dtDoorDetails);
 
-                                    sql = "UPDATE dbo_daily_department_goal SET actual_hours_punch =  actual_hours_punch + " + (Convert.ToDouble(dtDoorDetails.Rows[0][0].ToString()) * Convert.ToDouble(dtDoorDetails.Rows[0][1].ToString()) / 60).ToString() + " WHERE date_goal= CAST(GETDATE() as date)";
-                                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                                        cmd.ExecuteNonQuery();
+                                    sql = "UPDATE dbo.daily_department_goal SET actual_hours_punch =  actual_hours_punch + " + (Convert.ToDouble(dtDoorDetails.Rows[0][0].ToString()) * Convert.ToDouble(dtDoorDetails.Rows[0][1].ToString()) / 60).ToString() + " WHERE date_goal= CAST(GETDATE() as date)";
+                                    //using (SqlCommand cmd = new SqlCommand(sql, conn))
+                                    //    cmd.ExecuteNonQuery();
                                     log_time_100_percent();
-                                    sql = "UPDATE dbo_door SET complete_punch = -1, date_punch_complete= getdate() WHERE id =" + row[0].ToString();
-                                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                                        cmd.ExecuteNonQuery();
+                                    sql = "UPDATE dbo.door SET complete_punch = -1, date_punch_complete= getdate() WHERE id = " + row[0].ToString();
+                                    //using (SqlCommand cmd = new SqlCommand(sql, conn))
+                                    //    cmd.ExecuteNonQuery();
 
                                 }
                             }
@@ -370,12 +383,12 @@ namespace Punching
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
-                    if (dt.Rows[0][0] == null) //time_100_punch_percent //copying the layout in access too
+                    if (String.IsNullOrEmpty(dt.Rows[0][0].ToString())) //time_100_punch_percent //copying the layout in access too
                     {
                         if (Convert.ToDouble(dt.Rows[0][1]) / Convert.ToDouble(dt.Rows[0][2]) >= 1)
                         {
                             sql = "UPDATE dbo_daily_department_goal SET time_100_percent_punch = GETDATE() WHERE date_goal = CAST(GETDATE() as date)";
-                            cmd.CommandText = sql;
+                              cmd.CommandText = sql;
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -409,6 +422,22 @@ namespace Punching
         private void btnStock_Click(object sender, EventArgs e)
         {
             frmManageStock frm = new frmManageStock();
+            frm.ShowDialog();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Application.Restart();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            applyFilter();
+        }
+
+        private void btnComplete_Click(object sender, EventArgs e)
+        {
+            frmValidation frm = new frmValidation();
             frm.ShowDialog();
         }
     }

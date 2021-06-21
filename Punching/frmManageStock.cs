@@ -70,7 +70,8 @@ namespace Punching
                 dgvBentStock.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dgvUnbentStock.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-
+                dgvBentStock.ReadOnly = true;
+                dgvUnbentStock.ReadOnly = true;
                 radioYes.Checked = true;
 
                 conn.Close();

@@ -45,6 +45,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tempLabel = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -118,6 +119,7 @@
             // 
             // btnItems
             // 
+            this.btnItems.Enabled = false;
             this.btnItems.Location = new System.Drawing.Point(255, 12);
             this.btnItems.Name = "btnItems";
             this.btnItems.Size = new System.Drawing.Size(75, 34);
@@ -134,6 +136,7 @@
             this.btnComplete.TabIndex = 8;
             this.btnComplete.Text = "Mark Complete";
             this.btnComplete.UseVisualStyleBackColor = true;
+            this.btnComplete.Click += new System.EventHandler(this.btnComplete_Click);
             // 
             // button6
             // 
@@ -144,6 +147,7 @@
             this.button6.TabIndex = 9;
             this.button6.Text = "Log Off";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // groupBox1
             // 
@@ -220,11 +224,22 @@
             this.pictureBox2.TabIndex = 18;
             this.pictureBox2.TabStop = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(650, 160);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "Refresh";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 641);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.tempLabel);
             this.Controls.Add(this.label1);
@@ -271,6 +286,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label tempLabel;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button button1;
     }
 }
 

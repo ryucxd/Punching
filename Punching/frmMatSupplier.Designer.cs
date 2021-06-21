@@ -37,8 +37,8 @@
             // 
             this.cmbMatieral.FormattingEnabled = true;
             this.cmbMatieral.Items.AddRange(new object[] {
-            "\"Steel Co\"",
-            "\"SPM\""});
+            "Steel Co",
+            "SPM"});
             this.cmbMatieral.Location = new System.Drawing.Point(12, 22);
             this.cmbMatieral.Name = "cmbMatieral";
             this.cmbMatieral.Size = new System.Drawing.Size(229, 21);
